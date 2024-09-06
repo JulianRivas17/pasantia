@@ -18,6 +18,7 @@ public class PersonasCrontroller {
         data.add("Jorge");
         data.add("Raul");
         data.add("Alejandra");
+        data.add("Juli");
         return data;
     }
 }
