@@ -27,11 +27,15 @@ public class PersonasCrontroller {
     public List<Persona> getPersonas() {
         return personasRepository.findAll();
     }
+
     @PostMapping("/añadir-persona")
-    public Persona agregarPersona(@RequestBody Persona persona) {
-        persona.setId(idPersona++);
-        personas.add(persona);
-        return persona;
+    public ResponseEntity<Persona> addPersona(@RequestBody Persona persona) {  //La anotación @PathVariable le dice a Spring que el valor de id debe extraerse de la parte correspondiente de la URL.
+        try {
+            Persona nuevaPersona = personasRepository.save(persona);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaPersona);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @GetMapping("/{id}") //se establecee que id será tratado como una variable segun se ingrese en la url
@@ -52,6 +56,24 @@ public class PersonasCrontroller {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró persona con este ID: " + id);
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Persona> updatePersona(@PathVariable Long id, @RequestBody Persona personaActualizada) {
+        // Verificar si la persona con el ID proporcionado existe
+        Persona personaExistente = personasRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Persona no encontrada"));
+
+        // Actualizar los datos de la persona existente con los datos nuevos
+        personaExistente.setNombre(personaActualizada.getNombre());
+        personaExistente.setApellido(personaActualizada.getApellido());
+        personaExistente.setEdad(personaActualizada.getEdad());
+
+        // Guardar la persona actualizada
+        Persona personaGuardada = personasRepository.save(personaExistente);
+
+        // Retornar la respuesta con la persona actualizada
+        return ResponseEntity.ok(personaGuardada);
     }
 
 }
