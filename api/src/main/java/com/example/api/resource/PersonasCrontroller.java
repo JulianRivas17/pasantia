@@ -27,7 +27,7 @@ public class PersonasCrontroller {
         return persona;
     }
 
-    @GetMapping("/{id}") //se establece que id será tratado como una variable segun se ingrese en la url
+    @GetMapping("/{id}") //se establecee que id será tratado como una variable segun se ingrese en la url
     public Persona getPersonaById(@PathVariable Long id) {  //La anotación @PathVariable le dice a Spring que el valor de id debe extraerse de la parte correspondiente de la URL.
         for (Persona persona : personas) { //Este es un bucle for-each que itera sobre la lista personas. En cada iteración, la variable persona representa un objeto Persona de la lista.
             if (persona.getId().equals(id)) { //if id del objeto persona de Persona coincide con el id ingresado en la url
