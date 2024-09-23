@@ -1,32 +1,23 @@
-package com.example.api.domain;
+package com.example.api.dto;
 
-import jakarta.persistence.*;
+public class PersonaDto {
 
-@Entity
-public class Persona {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "nombre")
     private String nombre;
 
-    @Column(name = "apellido")
     private String apellido;
 
-    @Column(name = "edad")
     private int edad;
 
-    public Persona() {
+    private String favColor;
+
+    public String getFavColor() {
+        return favColor;
     }
 
-    public Persona(Long id, String nombre, String apellido, int edad) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.edad = edad;
+    public void setFavColor(String favColor) {
+        this.favColor = favColor;
     }
 
     public Long getId() {
@@ -60,4 +51,5 @@ public class Persona {
     public void setEdad(int edad) {
         this.edad = edad;
     }
+
 }
