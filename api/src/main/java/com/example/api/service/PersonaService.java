@@ -1,11 +1,10 @@
 package com.example.api.service;
 
-import com.example.api.criteria.PersonaSpecifications;
+import com.example.api.criteria.PersonaSpecification;
 import com.example.api.dto.PersonaCriteriaDto;
 import com.example.api.dto.PersonaDto;
 import com.example.api.model.Persona;
 import com.example.api.repository.PersonasRepository;
-import io.micrometer.observation.ObservationFilter;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -138,7 +137,7 @@ public class PersonaService {
     }
 
     public List<Persona> findPersonaByFilter(PersonaCriteriaDto criteriaDto) {
-        Specification<Persona> specification = PersonaSpecifications.personaSpecification(criteriaDto);
+        Specification<Persona> specification = PersonaSpecification.personaSpecification(criteriaDto);
         return personasRepository.findAll(specification);
     }
 }

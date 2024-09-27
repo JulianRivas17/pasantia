@@ -4,7 +4,7 @@ import com.example.api.dto.PersonaCriteriaDto;
 import com.example.api.model.Persona;
 import org.springframework.data.jpa.domain.Specification;
 
-public class PersonaSpecifications {
+public class PersonaSpecification {
 
     public static Specification<Persona> personaSpecification(PersonaCriteriaDto criteria) {
         return (root, query, criteriaBuilder) -> {
