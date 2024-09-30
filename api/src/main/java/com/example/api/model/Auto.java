@@ -1,5 +1,6 @@
 package com.example.api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -22,12 +23,21 @@ public class Auto {
         @Column(name = "precio")
         private float precio;
 
-    public Auto(Long id, String marca, String modelo, int anio, float precio) {
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "concesionaria_id")
+        @JsonBackReference
+        private Concesionaria concesionaria;
+
+    public Auto() {
+    }
+
+    public Auto(Long id, String marca, String modelo, int anio, float precio, Concesionaria concesionaria) {
         this.id = id;
         this.marca = marca;
         this.modelo = modelo;
         this.anio = anio;
         this.precio = precio;
+        this.concesionaria = concesionaria;
     }
 
     public Long getId() {
@@ -68,5 +78,13 @@ public class Auto {
 
     public void setPrecio(float precio) {
         this.precio = precio;
+    }
+
+    public Concesionaria getConcesionaria() {
+        return concesionaria;
+    }
+
+    public void setConcesionaria(Concesionaria concesionaria) {
+        this.concesionaria = concesionaria;
     }
 }
