@@ -1,7 +1,10 @@
 package com.example.api.controller;
 
+import com.example.api.dto.AutoDto;
 import com.example.api.model.Auto;
 import com.example.api.service.AutoService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,5 +72,10 @@ public class AutoController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/filter")
+    public Page<AutoDto> findAutoByFilter(Pageable pageable) {
+        return autoService.findAutoByFilter(pageable);
     }
 }
