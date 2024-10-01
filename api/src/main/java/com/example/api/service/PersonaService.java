@@ -5,6 +5,8 @@ import com.example.api.dto.PersonaCriteriaDto;
 import com.example.api.dto.PersonaDto;
 import com.example.api.model.Persona;
 import com.example.api.repository.PersonasRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -136,8 +138,8 @@ public class PersonaService {
         }
     }
 
-    public List<Persona> findPersonaByFilter(PersonaCriteriaDto criteriaDto) {
+    public Page<Persona> findPersonaByFilter(PersonaCriteriaDto criteriaDto, Pageable pageable) {
         Specification<Persona> specification = PersonaSpecification.personaSpecification(criteriaDto);
-        return personasRepository.findAll(specification);
+        return personasRepository.findAll(specification, pageable);  // Cambia el orden de los parámetros
     }
 }
