@@ -97,7 +97,7 @@ public class PersonaService {
     public List<PersonaDto> findAllDto() {
         List<Persona> personaList = personasRepository.findAll();
         List<PersonaDto> personaListDto = new ArrayList<>();
-        for (Persona persona : personaList){
+        for (Persona persona : personaList) {
             personaListDto.add(convertToDto(persona));
         }
         return personaListDto;

@@ -1,7 +1,11 @@
 package com.example.api.controller;
 
+import com.example.api.dto.ConcesionariaDto;
+import com.example.api.dto.ConcesionariaWithAutosDto;
 import com.example.api.model.Concesionaria;
 import com.example.api.service.ConcesionariaService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +25,18 @@ public class ConcesionariaController {
     @PostMapping("/agregar-concesionaria") // o "/add-concesionaria"
     public ResponseEntity<?> addConcesionaria(@RequestBody Concesionaria concesionaria) {
         try {
-            Concesionaria nuevaConcesionaria = concesionariaService.save(concesionaria);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaConcesionaria);
+            // Convertir Concesionaria a ConcesionariaDto
+            ConcesionariaDto concesionariaDto = new ConcesionariaDto();
+            concesionariaDto.setId(concesionaria.getId());
+            concesionariaDto.setNombre(concesionaria.getNombre());
+            concesionariaDto.setDireccion(concesionaria.getDireccion());
+            concesionariaDto.setTelefono(concesionaria.getTelefono());
+
+            // Llamar al servicio con el DTO
+            ConcesionariaDto nuevaConcesionariaDto = concesionariaService.save(concesionariaDto);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaConcesionariaDto);
         } catch (RuntimeException e) {
-            // Aquí podrías registrar el error para depuración
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error al agregar la concesionaria: " + e.getMessage());
         }
@@ -63,11 +75,22 @@ public class ConcesionariaController {
     public ResponseEntity<String> deleteConcesionaria(@PathVariable Long id) {
         try {
             concesionariaService.deleteById(id);
-            return ResponseEntity.ok("Persona eliminada con éxito.");
+            return ResponseEntity.ok("Concesionaria eliminada con éxito.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró concesionaria con este ID: " + id);
         }
     }
 
+    @GetMapping("/filter")
+    public Page<ConcesionariaDto> findConcesionariaByFilter(Pageable pageable) {
+        return concesionariaService.findConcesionariaByFilter(pageable);
+    }
+
+    // Endpoint para devolver las concesionarias con sus autos, paginado
+    @GetMapping("/with-autos")
+    public ResponseEntity<Page<ConcesionariaWithAutosDto>> getConcesionariasWithAutos(Pageable pageable) {
+        Page<ConcesionariaWithAutosDto> concesionariasPage = concesionariaService.findConcesionariaWithAutosByFilter(pageable);
+        return ResponseEntity.ok(concesionariasPage);
+    }
 
 }

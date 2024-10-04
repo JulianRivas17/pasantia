@@ -1,16 +1,12 @@
 package com.example.api.service;
 
-import com.example.api.criteria.PersonaSpecification;
 import com.example.api.dto.AutoDto;
-import com.example.api.dto.PersonaCriteriaDto;
 import com.example.api.model.Auto;
 import com.example.api.model.Concesionaria;
-import com.example.api.model.Persona;
 import com.example.api.repository.AutoRepository;
 import com.example.api.repository.ConcesionariaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +22,44 @@ public class AutoService {
     public AutoService(AutoRepository autoRepository, ConcesionariaRepository concesionariaRepository) {
         this.autoRepository = autoRepository;
         this.concesionariaRepository = concesionariaRepository;
+    }
+
+
+    public AutoDto autoConvertDto(Auto auto) {
+        AutoDto autoDto = new AutoDto();
+        autoDto.setId(auto.getId());
+        autoDto.setMarca(auto.getMarca());
+        autoDto.setModelo(auto.getModelo());
+        autoDto.setAnio(auto.getAnio());
+        autoDto.setPrecio(auto.getPrecio());
+        return autoDto;
+    }
+
+    public List<AutoDto> findAllAutoDto() {
+        List<Auto> autoList = autoRepository.findAll();
+        List<AutoDto> autoDtoList = new ArrayList<>();
+        for (Auto auto : autoList) {
+            autoDtoList.add(autoConvertDto(auto));
+        }
+        return autoDtoList;
+    }
+
+    private Auto autoDtoToEntity(AutoDto autoDto) {
+        Auto auto = new Auto();
+        auto.setId(autoDto.getId());
+        auto.setModelo(autoDto.getModelo());
+        auto.setMarca(autoDto.getMarca());
+        auto.setAnio(autoDto.getAnio());
+        auto.setPrecio(autoDto.getPrecio());
+        return auto;
+    }
+
+    public List<Auto> autoDtoListToEntityList(List<AutoDto> autoDtoList) {
+        List<Auto> autoList = new ArrayList<>();
+        for (AutoDto autoDto : autoDtoList) {
+            autoList.add(autoDtoToEntity(autoDto));
+        }
+        return autoList;
     }
 
     public Auto saveAuto(Long concesionariaId, Auto auto) {
@@ -68,25 +102,6 @@ public class AutoService {
         } else {
             throw new RuntimeException("Auto no encontrado con ID: " + id);
         }
-    }
-
-    private AutoDto autoConvertDto(Auto auto) {
-        AutoDto autoDto = new AutoDto();
-        autoDto.setId(auto.getId());
-        autoDto.setMarca(auto.getModelo());
-        autoDto.setModelo(auto.getModelo());
-        autoDto.setAnio(auto.getAnio());
-        autoDto.setPrecio(auto.getPrecio());
-        return autoDto;
-    }
-
-    public List<AutoDto> findAllDto() {
-        List<Auto> autoList = autoRepository.findAll();
-        List<AutoDto> autoDtoList = new ArrayList<>();
-        for (Auto auto : autoList) {
-            autoDtoList.add(autoConvertDto(auto));
-        }
-        return autoDtoList;
     }
 
     public Page<AutoDto> findAutoByFilter(Pageable pageable) {
